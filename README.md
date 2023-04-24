@@ -47,7 +47,8 @@ dtypes: int64(11), object(1)
 จะแบ่งขั้นตอนดังนี้ Data Cleansing and EDA, Training Testing and Evaluation
 
 # Data Cleansing and EDA
-- เปลี่ยน data type ของ feature 4 ตัว ['Source Port', 'Destination Port', 'NAT Source Port', 'NAT Destination Port'] จาก int เป็น str
+- เปลี่ยน data type ของ feature 4 ตัว ['Source Port', 'Destination Port', 'NAT Source Port', 'NAT Destination Port'] จาก int เป็น str และทำการ onehot encoding
+
 - upsampling label 'reset-both' ด้วย SMOTE โดยเลือกใช้ function SMOTENC ที่เหมาะกับ dataset ที่มีทั้ง categorical และ numerical data
 
 ![image](https://user-images.githubusercontent.com/77285026/234031546-d0e64b15-0b5d-4998-9aa0-974e798ea11c.png)
@@ -61,3 +62,14 @@ dtypes: int64(11), object(1)
 ![image](https://user-images.githubusercontent.com/77285026/234032593-012bf84d-b22a-41ae-824f-257f1c6929cc.png)
 
 - correlation ของ bytes และ packets มีค่าสูงเข้าใกล้ 1 สรุปว่า feature สองตัวนี้ไปในทางเดียวกันและ สามารถเลือกตัดตัวนึงออกได้ ในที่นี้จะตัด packets ออกเนื่องจาก bytes มีตัวเลขที่ละเอียดกว่า 
+
+# Training Testing and Evaluation
+- feature ที่เลิอกใช้ในการเข้า model ได้แก่ ['Source Port', 'Destination Port', 'NAT Source Port', 'NAT Destination Port', 'Bytes', 'Bytes Sent', 'Bytes Received', 'Elapsed Time (sec)'] 
+โดยเลือก port เนื่องจากเป็นแหล่งที่ใช้ในการระบุที่มาและปลายทางของ traffic ซึ่งเป็นสิ่งสำคัญในการ action ของ firewall  
+
+![image](https://user-images.githubusercontent.com/77285026/234037414-f9d0b48f-0805-4058-82a2-55281c1e611b.png)
+
+- ในขั้นตอนการนำ data เข้าโมเดลได้ทำเป็น pipeline โดยเริ่มที่การ preprocessing ซึ่งทำ feature scaling ใน feature ที่เป็น numerical และทำการ onehot encoding ใน feature ที่เป็น categorical จากนั้น flow ไปเข้า model
+
+![image](https://user-images.githubusercontent.com/77285026/234035447-415d976e-952b-42ea-a398-dd99c34d4563.png)
+
