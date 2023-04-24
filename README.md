@@ -74,7 +74,7 @@ dtypes: int64(11), object(1)
 ![image](https://user-images.githubusercontent.com/77285026/234035447-415d976e-952b-42ea-a398-dd99c34d4563.png)
 
 - การเลือก model จะทำ cross validation ระหว่าง decision tree และ KNN โดยกำหนด flod = 5 และ วัดผลด้วยค่า f1 macro เนื่องจากต้องการให้ความสำคัญกับทุก label เท่ากัน ผลคือ decision tree มี f1 macro มากกว่าที่ 0.93 เทียบกับ KNN ที่มีค่า 0.85
-- นำ decision tree มาทำ cross validation เพื่อหา max dept ที่เหมาะสมโดยกำหนดตั้งแต่ 1-10 และ flod = 5 ผลที่ได้ max dept ที่เหมาะสมคือ 10
+- นำ decision tree มาทำ cross validation เพื่อหา max dept ที่เหมาะสมโดยกำหนดตั้งแต่ 1-10 และ flod = 5 ผลที่ได้ max dept ที่เหมาะสมคือ 10 และวัดโดย entropy
 
 ```python
 numericTransformer = Pipeline(steps=[('scaler', MinMaxScaler())])
@@ -88,3 +88,28 @@ tree_pipe = Pipeline(steps=[('preprocessor', preprocessor),
 tree_pipe.fit(X_train, y_train)
 pred = tree_pipe.predict(X_test)                    
 ```
+```bash
+confusion_matrix
+[[7524    9    0    0]
+ [   0 2938   13    0]
+ [   0    2 2608    0]
+ [   0    3    0   10]]
+
+classification_report
+              precision    recall  f1-score   support
+
+       allow       1.00      1.00      1.00      7533
+        deny       1.00      1.00      1.00      2951
+        drop       1.00      1.00      1.00      2610
+  reset-both       1.00      0.77      0.87        13
+
+    accuracy                           1.00     13107
+   macro avg       1.00      0.94      0.97     13107
+weighted avg       1.00      1.00      1.00     13107
+
+f1 score macro : 0.9653815056895183
+```
+
+### สรุป
+- จากการทำ cross validation ด้วย model decision tree และ knn ผลที่ได้คือ decision tree มี performance ที่ดีกว่าจาก f1 macro ที่ใช้เป็นตัววัด
+- decision tree ที่ perform ที่สุดคือ model ที่ max dept = 10 และวัดโดย entropy จากการทำ cross validation ที่กำหนด max dept 1-10
