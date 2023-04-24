@@ -113,3 +113,4 @@ f1 score macro : 0.9653815056895183
 ### สรุป
 - จากการทำ cross validation ด้วย model decision tree และ knn ผลที่ได้คือ decision tree มี performance ที่ดีกว่าจาก f1 macro ที่ใช้เป็นตัววัด
 - decision tree ที่ perform ที่สุดคือ model ที่ max dept = 10 และวัดโดย entropy จากการทำ cross validation ที่กำหนด max dept 1-10
+- การ upsampling และ feature scaling มีส่วนช่วยใน performance ของ model ดีขึ้น
