@@ -73,3 +73,18 @@ dtypes: int64(11), object(1)
 
 ![image](https://user-images.githubusercontent.com/77285026/234035447-415d976e-952b-42ea-a398-dd99c34d4563.png)
 
+- การเลือก model จะทำ cross validation ระหว่าง decision tree และ KNN โดยกำหนด flod = 5 และ วัดผลด้วยค่า f1 macro เนื่องจากต้องการให้ความสำคัญกับทุก label เท่ากัน ผลคือ decision tree มี f1 macro มากกว่าที่ 0.93 เทียบกับ KNN ที่มีค่า 0.85
+- นำ decision tree มาทำ cross validation เพื่อหา max dept ที่เหมาะสมโดยกำหนดตั้งแต่ 1-10 และ flod = 5 ผลที่ได้ max dept ที่เหมาะสมคือ 10
+
+```python
+numericTransformer = Pipeline(steps=[('scaler', MinMaxScaler())])
+catsTransformer = Pipeline(steps=[('OneHotEncoder', OneHotEncoder(handle_unknown='ignore'))])
+preprocessor = ColumnTransformer(transformers=[('nums', numericTransformer, make_column_selector(dtype_include=int)),
+                                               ('cats', catsTransformer, make_column_selector(dtype_include=object))])
+tree = DecisionTreeClassifier(criterion='entropy', max_depth=10)
+tree_pipe = Pipeline(steps=[('preprocessor', preprocessor),
+                           ('tree', tree)])
+
+tree_pipe.fit(X_train, y_train)
+pred = tree_pipe.predict(X_test)                    
+```
