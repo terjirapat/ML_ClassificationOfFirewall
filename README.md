@@ -63,6 +63,8 @@ dtypes: int64(11), object(1)
 
 - correlation ของ bytes และ packets มีค่าสูงเข้าใกล้ 1 สรุปว่า feature สองตัวนี้ไปในทางเดียวกันและ สามารถเลือกตัดตัวนึงออกได้ ในที่นี้จะตัด packets ออกเนื่องจาก bytes มีตัวเลขที่ละเอียดกว่า 
 
+![image](https://user-images.githubusercontent.com/77285026/234199374-9afcb79d-9394-4b7e-a889-9fad6fc4ae17.png)
+
 # Training Testing and Evaluation
 - feature ที่เลิอกใช้ในการเข้า model ได้แก่ ['Source Port', 'Destination Port', 'NAT Source Port', 'NAT Destination Port', 'Bytes', 'Bytes Sent', 'Bytes Received', 'Elapsed Time (sec)'] 
 โดยเลือก port เนื่องจากเป็นแหล่งที่ใช้ในการระบุที่มาและปลายทางของ traffic ซึ่งเป็นสิ่งสำคัญในการ action ของ firewall  
@@ -76,6 +78,8 @@ dtypes: int64(11), object(1)
 - การเลือก model จะทำ cross validation ระหว่าง decision tree และ KNN โดยกำหนด flod = 5 และ วัดผลด้วยค่า f1 macro เนื่องจากต้องการให้ความสำคัญกับทุก label เท่ากัน ผลคือ decision tree มี f1 macro มากกว่าที่ 0.93 เทียบกับ KNN ที่มีค่า 0.85
 - นำ decision tree มาทำ cross validation เพื่อหา max dept ที่เหมาะสมโดยกำหนดตั้งแต่ 1-10 และ flod = 5 ผลที่ได้ max dept ที่เหมาะสมคือ 10 และวัดโดย entropy
 
+
+python code ที่ใช้ในการทำ pipeline final model
 ```python
 numericTransformer = Pipeline(steps=[('scaler', MinMaxScaler())])
 catsTransformer = Pipeline(steps=[('OneHotEncoder', OneHotEncoder(handle_unknown='ignore'))])
